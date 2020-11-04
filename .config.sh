@@ -1,0 +1,6 @@
+#!/bin/bash
+
+DATADIR=""
+NAME=""
+PORT=3000
+RPCPORT=8545
