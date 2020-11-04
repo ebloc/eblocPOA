@@ -11,6 +11,5 @@ function checkAllBalances() {
 
 checkAllBalances();
 
-personal.unlockAccount(eth.accounts[0], "yourPassword", 0); 
-personal.unlockAccount(eth.accounts[1], "yourPassword", 0); 
-//...
+personal.unlockAccount("0xd118b6ef83ccf11b34331f1e7285542ddf70bc49", 'alper', 0);
+personal.unlockAccount("0x12ba09353d5c8af8cb362d6ff1d782c1e195b571", 'alper', 0);

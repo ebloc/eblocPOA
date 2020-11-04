@@ -1,2 +1,26 @@
+pass.js
+
+config.sh
+
+*.txt~
+
+*.js~
+
+*.py~
+
+*.sh~
+
+\#*
+
+eth-net-intelligence-api
 
 *.out
+
+config.sh
+
+gethServer.out
+
+node_modules/
+*.ts
+
+*.bak

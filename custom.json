@@ -7,6 +7,9 @@
     "eip155Block": 3,
     "eip158Block": 3,
     "byzantiumBlock": 4,
+    "constantinopleBlock": 2862930,
+    "petersburgBlock": 2862930,
+    "istanbulBlock": 3831182,
     "clique": {
       "period": 15,
       "epoch": 30000

@@ -1,3 +1,3 @@
 #!/bin/bash
-DATADIR="$HOME/ebloc_POA";
-sudo geth --datadir "$DATADIR/private" attach ipc:$DATADIR/private/geth.ipc console
+
+sudo geth --datadir "/private" attach ipc:/private/geth.ipc console

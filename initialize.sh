@@ -1,31 +1,48 @@
 #!/bin/bash
 
-sudo killall geth
-eblocPath="$PWD"
-geth --datadir="$eblocPath/private" init custom.json
+read_var () {
+    read var
 
-var=$(echo $eblocPath | sed 's/\//\\\//g')
-sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" server.sh && rm server.sh.bak
-sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" client.sh && rm client.sh.bak
-sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" stats.sh  && rm stats.sh.bak
+    if [[ $var == *\$* ]]; then
+        echo 'Please enter string without a dollar sign'
+    fi
 
-echo -e "\nPlease enter name for eBloc Network Status:"
-read var
+    if [[ $var == *\"* ]]; then
+        echo 'Please enter string without a double quote sign'
+        exit
+    fi
 
-if [[ $var == *\$* ]]; then
-    echo 'Please enter string without a dollar sign'
+    if [[ $var == *\'* ]]; then
+        echo 'Please enter string without a single quote sign'
+        exit
+    fi
+}
+ebloc_path="$PWD"
+var=$(echo $ebloc_path | sed 's/\//\\\//g')
+
+FILE=config.sh
+if [ ! -f "$FILE" ]; then
+    cp .config.sh config.sh
 fi
 
-if [[ $var == *\"* ]]; then
-    echo 'Please enter string without a double quote sign'
-    exit
+FILE=pass.js
+if [ ! -f "$FILE" ]; then
+    cp .pass.js pass.js
 fi
 
-if [[ $var == *\'* ]]; then
-    echo 'Please enter string without a single quote sign'
-    exit
-fi
+sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" config.sh && rm -f config.sh.sh.bak
+sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" config.sh && rm -f config.sh.sh.bak
+sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" config.sh && rm -f config.sh.sh.bak
 
-sed -i.bak "s/^\(NAME=\).*/\1\"$var\"/" stats.sh && rm stats.sh.bak
 
-# npm install
+read -p "Enter name for eBloc Network Status: " name
+name=${name:-myNameIs}
+sed -i.bak "s/^\(NAME=\).*/\1\"$name\"/" config.sh && rm -f config.sh.bak
+
+read -p "Enter PORT [3000]: " port
+port=${port:-3000}
+sed -i.bak "s/^\(PORT=\).*/\1$port/" config.sh && rm -f config.sh.bak
+
+read -p "Enter RPC-PORT [8545]: " rpc_port
+rpc_port=${rpc_port:-8545}
+sed -i.bak "s/^\(RPCPORT=\).*/\1$rpc_port/" config.sh && rm -f config.sh.bak
