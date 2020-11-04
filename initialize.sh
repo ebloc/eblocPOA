@@ -34,8 +34,8 @@ sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" config.sh && rm -f config.sh.sh.bak
 sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" config.sh && rm -f config.sh.sh.bak
 sed -i.bak "s/^\(DATADIR=\).*/\1\"$var\"/" config.sh && rm -f config.sh.sh.bak
 
-
 read -p "Enter name for eBloc Network Status: " name
+
 name=${name:-myNameIs}
 sed -i.bak "s/^\(NAME=\).*/\1\"$name\"/" config.sh && rm -f config.sh.bak
 

@@ -45,9 +45,9 @@ fi
 nohup geth --syncmode fast --cache=1024 --shh --datadir /private --port $PORT \
       --rpcaddr 127.0.0.1 --rpc --rpcport $RPCPORT --rpccorsdomain="*" --networkid 23422 \
       --rpcapi admin,eth,net,web3,debug,personal,shh --targetgaslimit '10000000' \
-      --gasprice "18000000000" --allow-insecure-unlock> $DATADIR/geth_server.out &
+      --gasprice "18000000000" --allow-insecure-unlock> $DATADIR/geth_server.out 2>&1 &
 
-FILE=pass.js
+FILE=$DIR/pass.js
 if [ ! -f "$FILE" ]; then
     cp .pass.js pass.js
 fi
@@ -60,7 +60,6 @@ do
         sleep $SLEEP_TILL_SERVER_STARTS
         # Second time called in case peers are not connected on the first try
         connect_peers
-
         echo "loadScript(\"$DATADIR"/pass.js"\")" | sudo geth --datadir "/private" attach ipc:/private/geth.ipc console
         echo "net" | sudo geth --datadir "/private" attach ipc:/private/geth.ipc console
         break
@@ -72,6 +71,5 @@ done
 
 $DIR/stats.sh
 sudo chown $(whoami) /private/geth.ipc
-sudo chown $SUDO_USER /private/geth.ipc
 
 # tail -f geth_server.out

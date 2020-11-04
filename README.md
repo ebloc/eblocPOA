@@ -182,8 +182,8 @@ Navigate into `eBlocPOA` directory.
 .. warning:: Do `./init_custom.sh` only once. You do not need to do it again
 
 ```bash
-sudo ./init_custom.sh
 ./initialize.sh
+sudo ./init_custom.sh
 ```
 
 ### Server run (Always run with `sudo`)
@@ -348,6 +348,10 @@ true
   transactionIndex: 0
 }
 ```
+
+### Clean the chain
+
+`sudo rm -rf /private/geth/chaindata`
 
 ### **Some helpful links**
 
