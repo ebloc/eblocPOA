@@ -1,19 +1,17 @@
-# **Proof-of-Authority Private Ethereum Network (eBlocPOA)**
+Proof-of-Authority Private Ethereum Network (eBlocPOA)
+======================================================
 
+## Overview
 Dashboard: [http://ebloc.cmpe.boun.edu.tr:3015/](http://ebloc.cmpe.boun.edu.tr:3015/)
 
 Explorer: [http://ebloc.cmpe.boun.edu.tr:8000/](http://ebloc.cmpe.boun.edu.tr:8000/)
 
 Chat on Gitter: [https://gitter.im/eBloc/eBlocPOA](https://gitter.im/eBloc/eBlocPOA)
 
-## **Preinstallations**
-
-### **Installation Instructions for Mac**
-
-#### Pre-requirements
-
+## Preinstallations
+### Installation Instructions for Mac
+#### Prerequisites
 - If you don't have Homebrew, [install it first](https://brew.sh).
-
 - From following link: https://nodejs.org/en/, download `10.10.0 Current`.
 
 ```bash
@@ -42,37 +40,35 @@ brew install ethereum
 ```
 --->
 
-### **Installation Instructions for Linux**
-
+### Installation Instructions for Linux
 #### Node.js and Node Package Manager (`npm`) installation
-
 ```bash
-sudo apt-get install nodejs
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+sudo apt-get install nodejs curl
+curl -sL https://deb.nodesource.com/setup_15.x | sudo -E bash -
 sudo apt-get install -y nodejs
 sudo npm install pm2 -g
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 ```
 
-#### **[Go Installation](https://github.com/golang/go/wiki/Ubuntu)**
-
+#### [Go Installation](https://github.com/golang/go/wiki/Ubuntu)
 ```bash
 sudo apt-get update
-wget https://dl.google.com/go/go1.14.linux-amd64.tar.gz
-sudo tar -xvf go1.14.linux-amd64.tar.gz
-rm -f go1.14.linux-amd64.tar.gz
+tar_name="go1.15.8.linux-amd64.tar.gz"
+wget https://golang.org/dl/$tar_name
+tar -xvf $tar_name
+rm -f $tar_name
 sudo rm -rf /usr/local/go
 sudo mv go /usr/local
 export GOROOT=/usr/local/go
+export GOPATH=/usr/local/go/bin/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 ```
 
 - Put this line `export PATH=$PATH:/usr/local/go/bin`  into `$HOME/.profile` file and do `source $HOME/.profile`
 
-#### Go Ethereum (`geth`) Pre-requirements
-
+#### Go Ethereum (`geth`) Prerequisites
 ```bash
-sudo apt-get install git
-sudo apt-get install -y build-essential libgmp3-dev golang
+sudo apt-get install -y git build-essential libgmp3-dev golang
 ```
 
 <!---
@@ -99,7 +95,6 @@ sudo apt-get install ethereum
 ------------
 
 ### Do following for both Linux and Mac
-
 #### [Go Ethereum](https://github.com/ethereum/go-ethereum) (`geth`) building from source
 
 It is recommended to install latest `geth` version `1.9.23`.
@@ -153,10 +148,8 @@ make geth
 
 ----------------------
 
-## **eBloc Setup on Linux and macOS**
-
+## eBloc Setup on Linux and macOS
 ### Downloading
-
 ```bash
 cd $HOME
 git clone https://github.com/ebloc/eBlocPOA.git
@@ -170,13 +163,11 @@ npm install
 ```
 
 ### Create private folder
-
 ```bash
 sudo mkdir -p /private
 ```
 
 ### Initialize a new genesis block and definition for the network
-
 Navigate into `eBlocPOA` directory.
 
 .. warning:: Do `./init_custom.sh` only once. You do not need to do it again
@@ -187,13 +178,12 @@ sudo ./init_custom.sh
 ```
 
 ### Server run (Always run with `sudo`)
-
 ```bash
 sudo ./server.sh
 ```
 
 - If you want to kill your server please do: `sudo killall geth`
-- You can keep track of output of your `geth-server` by running following: `sudo tail -f geth_server.out` 
+- You can keep track of output of your `geth-server` by running following: `sudo tail -f geth_server.out`
 
 ```bash
 $ sudo tail -f geth_server.out
@@ -203,7 +193,6 @@ INFO [02-12|16:22:49] Imported new chain segment   blocks=1  txs=0 mgas=0.000 el
 ```
 
 ### Client run (geth console)
-
 ```bash
 ./client.sh
 ```
@@ -213,7 +202,6 @@ If you are successfully connected into `eBlocPOA` network inside `geth` console;
 -----------------
 
 ### Create an Ethereum Account
-
 **Creating an account:**
 
 ```bash
@@ -236,7 +224,6 @@ UTC--2018-02-14T10-46-54.423218000Z--a0a50a64cac0744dea5287d1025b8ef28aeff36e
 ```
 
 **Using Console:**
-
 You can also create your Ethereum account inside your `geth-client`. Here your `Keystore File` will be created with root permission, `eBlocWallet` will not able to unlock it.
 
 ```bash
@@ -263,12 +250,10 @@ sudo chown -R $(whoami) private/keystore/UTC--...
 
 -----------------
 
-### **How to attach to eBloc Network Status**
-
+### How to attach to eBloc Network Status
 You can see your node on  eBloc Network Status (http://ebloc.cmpe.boun.edu.tr:3015). Setup is done when you run `./initialize.sh`. If you face with any issue please see the [guide](https://github.com/ebloc/eBloc/issues/2).
 
 #### To Run
-
 - Please open `stats.sh` file under `eBlocPOA`directory. Write your unique name instead of `mynameis`.
 
 - .. warning:: Change `DATADIR` variable with path for `eth-net-intelligence-api` directory
@@ -276,7 +261,6 @@ You can see your node on  eBloc Network Status (http://ebloc.cmpe.boun.edu.tr:30
 - .. warning:: `geth-server` should be running on the background
 
 #### Finally you should run following command
-
 ```bash
 ./stats.sh
 ```
@@ -287,8 +271,7 @@ Now, you should see your node on http://ebloc.cmpe.boun.edu.tr:3015.
 
 -----------------
 
-### **Helpful commands on geth client**
-
+### Helpful commands on geth client
 Please try following commands on your `geth-client` console.
 
 ```bash
@@ -350,10 +333,8 @@ true
 ```
 
 ### Clean the chain
-
 `sudo rm -rf /private/geth/chaindata`
 
-### **Some helpful links**
-
+### Some helpful links
 - [Managing your accounts](https://github.com/ethereum/go-ethereum/wiki/Managing-your-accounts)
 - [Sending Ether on geth-client](https://github.com/ethereum/go-ethereum/wiki/Sending-ether)

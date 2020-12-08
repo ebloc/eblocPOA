@@ -1,3 +1,4 @@
 #!/bin/bash
 
-sudo geth --datadir "/private" attach ipc:/private/geth.ipc console
+DATADIR=/home/alper/.eblocpoa
+sudo geth --datadir "$_DATADIR" attach ipc:$DATADIR/geth.ipc console

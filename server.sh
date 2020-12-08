@@ -1,10 +1,16 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source $DIR/config.sh
+
+BLUE="\033[1;36m"
+NC="\033[0m" # no color
+
 connect_peers () {
     echo -e "## Connecting to peers"
-    echo "loadScript(\"$DATADIR"/peers.js"\")" | sudo geth --datadir "/private" attach ipc:/private/geth.ipc console
+    echo "loadScript(\"$REPODIR"/peers.js"\")" | \
+        sudo geth --datadir "$DATADIR" attach ipc:$DATADIR/geth.ipc console
 }
-
 
 # Ensure running as root
 if [ "$(id -u)" != "0" ]; then
@@ -14,18 +20,18 @@ fi
 
 SLEEP_DURATION=2
 SLEEP_TILL_SERVER_STARTS=1
-FILE_IPC=/private/geth.ipc
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-source $DIR/config.sh
 
-# Updates peers
+FILE_IPC=$DATADIR/geth.ipc
+echo $FILE_IPC
+
+# update peers
 (&>/dev/null git fetch --all &)
 git checkout origin/master -- peers.js 2>/dev/null
 git checkout origin/master -- custom.json 2>/dev/null
 
-if [ -z "$DATADIR" ]
+if [ -z "$REPODIR" ]
 then
-    echo "E: Fill DATADIR variable in config.sh. You can run ./initialize.sh"
+    echo "E: Fill `REPODIR` variable in config.sh. You can run ./initialize.sh"
     exit
 fi
 
@@ -34,23 +40,19 @@ then
     echo "E: PORT variable is empty, please set"
     exit
 else
-    echo "PORT="$PORT
+    printf "${BLUE}==>${NC} PORT=$PORT\n"
 fi
 
 pid=$(sudo lsof -n -i :$PORT | grep LISTEN| awk '{print $2}');
 if [ -n "$pid" ]; then
-  sudo kill -9 $pid
+    sudo kill -9 $pid
 fi
 
-nohup geth --syncmode fast --cache=1024 --shh --datadir /private --port $PORT \
-      --rpcaddr 127.0.0.1 --rpc --rpcport $RPCPORT --rpccorsdomain="*" --networkid 23422 \
-      --rpcapi admin,eth,net,web3,debug,personal,shh --targetgaslimit '10000000' \
-      --gasprice "18000000000" --allow-insecure-unlock> $DATADIR/geth_server.out 2>&1 &
-
-FILE=$DIR/pass.js
-if [ ! -f "$FILE" ]; then
-    cp .pass.js pass.js
-fi
+nohup geth --syncmode fast --cache=1024 --shh --datadir /home/alper/.eblocpoa \
+      --port $PORT  --rpcaddr 127.0.0.1 --rpc --rpcport $RPCPORT --rpccorsdomain="*" \
+      --networkid 23422 --rpcapi admin,eth,net,web3,debug,personal,shh \
+      --targetgaslimit '10000000' --gasprice "18000000000" \
+      --allow-insecure-unlock > $REPODIR/geth_server.out 2>&1 &
 
 sleep $SLEEP_DURATION
 for i in {0..15}
@@ -58,10 +60,16 @@ do
     if [ -e "$FILE_IPC" ]; then
         connect_peers
         sleep $SLEEP_TILL_SERVER_STARTS
-        # Second time called in case peers are not connected on the first try
-        connect_peers
-        echo "loadScript(\"$DATADIR"/pass.js"\")" | sudo geth --datadir "/private" attach ipc:/private/geth.ipc console
-        echo "net" | sudo geth --datadir "/private" attach ipc:/private/geth.ipc console
+        connect_peers  # called again in case peers are not connected
+        echo "loadScript(\"$DIR"/pass.js"\")" | \
+            sudo geth --datadir "$DATADIR" attach ipc:$DATADIR/geth.ipc console
+
+        FILE=$DIR/unlock.js
+        if [ -f "$FILE" ]; then
+            echo "loadScript(\"$DIR"/unlock.js"\")" | \
+                sudo geth --datadir "$DATADIR" attach ipc:$DATADIR/geth.ipc console
+        fi
+        echo "net" | sudo geth --datadir "$DATADIR" attach ipc:$DATADIR/geth.ipc console | tail -n +10 | head -n -1
         break
     else
         echo -e "Try $i: Sleeping for $SLEEP_DURATION seconds"
@@ -69,7 +77,8 @@ do
     fi
 done
 
-$DIR/stats.sh
-sudo chown $(whoami) /private/geth.ipc
+echo "" && $DIR/stats.sh
+sleep 0.25
+sudo chown $(whoami) $DATADIR/geth.ipc
 
 # tail -f geth_server.out

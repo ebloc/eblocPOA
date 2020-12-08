@@ -1,4 +1,4 @@
 #!/bin/bash
 
 sudo killall geth
-geth --datadir="/private" init custom.json
+sudo geth --datadir="/private" init custom.json
